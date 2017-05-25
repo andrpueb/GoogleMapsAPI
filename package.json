@@ -1,0 +1,46 @@
+{
+  "name": "andrespuentes.net",
+  "version": "1.0.0",
+  "description": "portfolio website",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrpueb/andrespuentes.net.git"
+  },
+  "author": "Andres Puentes",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.18.8",
+    "connect": "^3.6.1",
+    "cssnano": "^3.10.0",
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.2.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-newer": "^1.3.0",
+    "gulp-sass": "^3.1.0",
+    "gulp-uglify": "^2.1.2",
+    "htmlmin": "0.0.7",
+    "imagemin": "^5.2.2",
+    "newer": "^0.1.5",
+    "postcss-unique-selectors": "^2.0.2",
+    "uglify": "^0.1.5"
+  },
+  "bugs": {
+    "url": "https://github.com/andrpueb/andrespuentes.net/issues"
+  },
+  "homepage": "https://github.com/andrpueb/andrespuentes.net#readme",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-cssnano": "^2.1.2",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-imagemin": "^3.2.0",
+    "gulp-newer": "^1.3.0",
+    "gulp-uglify": "^2.1.2",
+    "postcss-unique-selectors": "^2.0.2"
+  }
+}
