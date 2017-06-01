@@ -1,5 +1,6 @@
 var $options = $('.options');
+var $arrow = $('.arrow');
 
-$options.on('click', function(){
+$arrow.on('click', function(){
   $options.toggleClass('options_appear');
 })

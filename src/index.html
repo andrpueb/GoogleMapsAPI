@@ -10,11 +10,15 @@
       <div class="options">
         <div class="option_menu">
           <h2>My chilhood neighborhood</h2>
-          <ul>
-            <li>Uno</li>
-            <li>Dos</li>
-            <li>Tres</li>
-          </ul>
+          <div>
+            <span class="text">Search for places</span>
+            <input type="text" placeholder="My House" data-bind="value: Query, valueUpdate: 'keyup'" autocomplete="off" >
+          </div>
+          <div class="place_list">
+            <ul data-bind="foreach: searchResults">
+              <li data-bind="text: title"></li>
+            </ul>
+          </div>
         </div>
         <div class="arrow">
           <img class="arrow_img" src="images/002-right-arrow.svg" alt="">
@@ -27,9 +31,9 @@
   </body>
   <script type="text/javascript" src="jQuery/jquery-3.2.1.min.js"></script>
   <script src="ko/knockout-3.4.2.js"></script>
-  <script src="script/map.js"></script>
   <script src="script/knockout.js"></script>
   <script src="script/jQuery.js"></script>
+  <script src="script/map.js"></script>
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCzglwScQnptg2QE0ydILSF10brDe3nTBs&v=3&callback=initMap">
   </script>
