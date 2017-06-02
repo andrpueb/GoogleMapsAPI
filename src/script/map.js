@@ -422,55 +422,108 @@ var icons = [{
 
 var map;
 
-var markers = []; //En este array guardamos las lista de locations como markers
 
-function initMap() {
+//MODEL
 
-  map = new google.maps.Map(document.getElementById('map'), {
-    center: { lat: 51.508408,  lng: -0.127676},
-    zoom: 10
+var firstPlaces = [{
+    title: 'London Eye',
+    location: {
+      lat: 51.503518,
+      lng: -0.119704
+    }
+  },
+  {
+    title: 'Big Ben',
+    location: {
+      lat: 51.500943,
+      lng: -0.124615
+    }
+  },
+  {
+    title: 'Covent Garden',
+    location: {
+      lat: 51.512194,
+      lng: -0.122713
+    }
+  },
+  {
+    title: 'Hyde Park',
+    location: {
+      lat: 51.506966,
+      lng: -0.169387
+    }
+  },
+  {
+    title: 'Waterloo',
+    location: {
+      lat: 51.503352,
+      lng: -0.112327
+    }
+  },
+  {
+    title: 'Buckingham Palace',
+    location: {
+      lat: 51.501313,
+      lng: -0.141820
+    }
+  }
+];
+
+//VIEWMODEL
+
+var Location = function(data) {
+  this.title = data.title;
+  this.location = {};
+  this.location.lat = data.location.lat;
+  this.location.lng = data.location.lng;
+  this.appear = ko.observable(true);
+};
+
+
+var ViewModel = function() {
+  var self = this;
+
+  self.searchResults = ko.observableArray([]);
+  self.Query = ko.observable('');
+  firstPlaces.forEach(function(placeItem) {
+    self.searchResults.push(new Location(placeItem));
   });
 
+  self.searchInput = ko.computed(function() {
+    var userInput = self.Query();
+    for (var i = 0; i < self.searchResults().length; i++) {
+      if (self.searchResults()[i].title.toLowerCase().indexOf(userInput) >= 0) {
+        self.searchResults()[i].appear(true);
+        if (self.searchResults()[i].marker) {
+          self.searchResults()[i].marker.setVisible(true);
+        }
+      } else {
+        self.searchResults()[i].appear(false);
+        if (self.searchResults()[i].marker) {
+          self.searchResults()[i].marker.setVisible(false);
+        }
+      }
+    }
+  });
 
-/*  document.getElementById.addListener('click', function() {
-    populateInfoWindow(this, myInfowindow);
-  });*/
-
-
-  //Debo cambiar el icono como opciones con botones sobre el mapa
-  var markerIcon = icons[1].url;
-
-  var myInfowindow = new google.maps.InfoWindow();
-  var bounds = new google.maps.LatLngBounds();
-
-  for (var i = 0; i < myVM.placeList().length; i++) {
-    // Get the position from the location array.
-    var position = myVM.searchResults()[i].location;
-    var title = myVM.searchResults()[i].title();
-    // Create a marker per location, and put into markers array.
-    var marker = new google.maps.Marker({
-      map: map,
-      position: position,
-      title: title,
-      animation: google.maps.Animation.DROP,
-      icon: markerIcon,
-      id: i
-    });
-
-
-    // Push the marker to our array of markers.
-    markers.push(marker);
-    // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener('click', function() {
-      populateInfoWindow(this, myInfowindow);
-    });
-
-    bounds.extend(markers[i].position);
-
+  self.showMyMarker = function(self){
+     console.log(self.marker);
+     google.maps.event.trigger(self.marker, "click");
   }
-  map.fitBounds(bounds);
 
+
+
+
+  console.log(this.searchResults());
 }
+
+
+var myVM = new ViewModel();
+
+ko.applyBindings(myVM);
+
+
+
 
 
 function populateInfoWindow(marker, infowindow) {
@@ -486,9 +539,58 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-function showListInfwindow(){
 
 
+//  GOOGLE MAPS
 
+
+function initMap() {
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    center: {
+      lat: 51.508408,
+      lng: -0.127676
+    },
+    zoom: 10
+  });
+  //En este array guardamos las lista de locations como markers
+
+  /*  document.getElementById.addListener('click', function() {
+      populateInfoWindow(this, myInfowindow);
+    });*/
+
+  var markers = [];
+  //Debo cambiar el icono como opciones con botones sobre el mapa
+  var markerIcon = icons[1].url;
+
+  var myInfowindow = new google.maps.InfoWindow();
+  var bounds = new google.maps.LatLngBounds();
+
+  for (var i = 0; i < myVM.searchResults().length; i++) {
+    // Get the position from the location array.
+    var position = myVM.searchResults()[i].location;
+    var title = myVM.searchResults()[i].title;
+    // Create a marker per location, and put into markers array.
+    var marker = new google.maps.Marker({
+      map: map,
+      position: position,
+      title: title,
+      animation: google.maps.Animation.DROP,
+      icon: markerIcon,
+      id: i
+    });
+
+    // Push the marker to our searchResults array adding a marker object to each location.
+    myVM.searchResults()[i].marker = marker;
+    // Create an onclick event to open the large infowindow at each marker.
+    marker.addListener('click', function() {
+      populateInfoWindow(this, myInfowindow);
+
+      });
+
+    bounds.extend(myVM.searchResults()[i].marker.position);
+  }
+
+  map.fitBounds(bounds);
 
 }

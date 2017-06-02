@@ -16,7 +16,7 @@
           </div>
           <div class="place_list">
             <ul data-bind="foreach: searchResults">
-              <li data-bind="text: title"></li>
+              <li data-bind="text: title, visible: appear, click: $parent.showMyMarker" ></li>
             </ul>
           </div>
         </div>
@@ -31,7 +31,6 @@
   </body>
   <script type="text/javascript" src="jQuery/jquery-3.2.1.min.js"></script>
   <script src="ko/knockout-3.4.2.js"></script>
-  <script src="script/knockout.js"></script>
   <script src="script/jQuery.js"></script>
   <script src="script/map.js"></script>
   <script async defer
