@@ -426,46 +426,52 @@ var map;
 //MODEL
 
 var firstPlaces = [{
-    title: 'London Eye',
+    title: 'Gordons wine bar',
     location: {
-      lat: 51.503518,
-      lng: -0.119704
-    }
+      lat: 51.508144,
+      lng: -0.123314
+    },
+    id: '4acdb591f964a520c7cc20e3'
   },
   {
-    title: 'Big Ben',
+    title: 'Taro Asian Restaurant',
     location: {
-      lat: 51.500943,
-      lng: -0.124615
-    }
+      lat: 51.511638,
+      lng: -0.135577
+    },
+    id: '4b7152d5f964a52022412de3'
+  },
+  {
+    title: 'Franco Manca Pizzeria',
+    location: {
+      lat: 51.515339,
+      lng: -0.136489
+    },
+    id: '55aab651498e32cd64c46495'
   },
   {
     title: 'Covent Garden',
     location: {
-      lat: 51.512194,
-      lng: -0.122713
-    }
+      lat: 51.511852,
+      lng: -0.122594
+    },
+    id: '4ba6419bf964a520b23f39e3'
   },
   {
-    title: 'Hyde Park',
+    title: 'Dishoom Indian Restaurant',
     location: {
-      lat: 51.506966,
-      lng: -0.169387
-    }
+      lat: 51.512664,
+      lng: -0.126932
+    },
+    id: '4c31c371a0ced13a150d146e'
   },
   {
-    title: 'Waterloo',
+    title: 'Tortilla Mexican Food',
     location: {
-      lat: 51.503352,
-      lng: -0.112327
-    }
-  },
-  {
-    title: 'Buckingham Palace',
-    location: {
-      lat: 51.501313,
-      lng: -0.141820
-    }
+      lat: 51.508768,
+      lng: -0.126626
+    },
+    id: '531750e9498e3eae0c96b150'
   }
 ];
 
@@ -476,12 +482,14 @@ var Location = function(data) {
   this.location = {};
   this.location.lat = data.location.lat;
   this.location.lng = data.location.lng;
+  this.id = data.id;
   this.appear = ko.observable(true);
 };
 
 
 var ViewModel = function() {
   var self = this;
+  self.markerIcon = ko.observable(icons[1].url);
 
   self.searchResults = ko.observableArray([]);
   self.Query = ko.observable('');
@@ -489,8 +497,9 @@ var ViewModel = function() {
     self.searchResults.push(new Location(placeItem));
   });
 
+
   self.searchInput = ko.computed(function() {
-    var userInput = self.Query();
+    var userInput = self.Query().toLowerCase();
     for (var i = 0; i < self.searchResults().length; i++) {
       if (self.searchResults()[i].title.toLowerCase().indexOf(userInput) >= 0) {
         self.searchResults()[i].appear(true);
@@ -506,17 +515,23 @@ var ViewModel = function() {
     }
   });
 
-  self.showMyMarker = function(self){
-     console.log(self.marker);
-     google.maps.event.trigger(self.marker, "click");
+  self.showMyMarker = function(location) {
+    console.log(location.marker);
+    google.maps.event.trigger(location.marker, "click");
   }
 
+  self.changeIcon = function(icon){
+    self.markerIcon = (icon.url);
+    for(var i=0; i <self.searchResults().length; i++){
+      self.searchResults()[i].marker.setIcon(self.markerIcon);
+      console.log(self.searchResults()[i].marker.icon);
+    }
+  }
 
-
+self.markerIcon();
 
   console.log(this.searchResults());
 }
-
 
 var myVM = new ViewModel();
 
@@ -524,12 +539,44 @@ ko.applyBindings(myVM);
 
 
 
+//Google maps error handling
+$.getScript( "https://maps.googleapis.com/maps/api/js?libraries=places,drawing&key=AIzaSyCzglwScQnptg2QE0ydILSF10brDe3nTBs&v=3&callback=initMap" )
+  .fail(function(){
+    alert('Please check your internet connection or try later')
+});
+
 
 
 function populateInfoWindow(marker, infowindow) {
   // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
+    console.log(marker.title);
+    var theUrl = "https://api.foursquare.com/v2/venues/" + marker.id + "?v=20131016&client_id=AZHL0ZO2D4HUKB04UTI2DSNVX0TCG0L1BOOKA3YXBURZ1NVN&client_secret=DQSLA5NG3105YR4Q1QI1G3T1H1YJHMOTYRD4HLIMAAXI3GEM";
+    $.ajax({
+      url: theUrl,
+      data: {
+        format: 'json'
+      },
+      dataType: 'jsonp',
+      success: function(data) {
+        infowindow.setContent(
+          '<div>' +
+          '<img src="images/Foursquare.png" style="max-width: 100px" ><br>' +
+          marker.title + '<br>' +
+          data.response.venue.categories[0].name +
+          '<br>' +
+          '<img src=' + data.response.venue.bestPhoto.prefix + '100x100' + data.response.venue.bestPhoto.suffix + '>' +
+          '<br>' +
+          'Rating: ' + data.response.venue.rating +
+          '<br>' +
+          '</div>');
+        console.log(data.response.venue);
+      },
+      error: function() {
+        infowindow.setContent('<div> Please check your internet connection or try again later </div>');
+      }
+    })
     infowindow.setContent('<div>' + marker.title + '</div>');
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
@@ -539,11 +586,18 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
-
+function toggleBounce(marker) {
+  if (marker.getAnimation() !== null) {
+    marker.setAnimation(null);
+  } else {
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+      marker.setAnimation(null);
+    }, 1400);
+  }
+}
 
 //  GOOGLE MAPS
-
-
 function initMap() {
 
   map = new google.maps.Map(document.getElementById('map'), {
@@ -559,9 +613,6 @@ function initMap() {
       populateInfoWindow(this, myInfowindow);
     });*/
 
-  var markers = [];
-  //Debo cambiar el icono como opciones con botones sobre el mapa
-  var markerIcon = icons[1].url;
 
   var myInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
@@ -570,14 +621,16 @@ function initMap() {
     // Get the position from the location array.
     var position = myVM.searchResults()[i].location;
     var title = myVM.searchResults()[i].title;
+    var id = myVM.searchResults()[i].id;
+    var icon = myVM.markerIcon();
     // Create a marker per location, and put into markers array.
     var marker = new google.maps.Marker({
       map: map,
       position: position,
       title: title,
       animation: google.maps.Animation.DROP,
-      icon: markerIcon,
-      id: i
+      icon: icon,
+      id: id
     });
 
     // Push the marker to our searchResults array adding a marker object to each location.
@@ -586,7 +639,11 @@ function initMap() {
     marker.addListener('click', function() {
       populateInfoWindow(this, myInfowindow);
 
-      });
+    });
+
+    marker.addListener('click', function() {
+      toggleBounce(this);
+    });
 
     bounds.extend(myVM.searchResults()[i].marker.position);
   }

@@ -1,40 +1,46 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="style/style.css">
-    <title></title>
-  </head>
-  <body>
-    <div class="container">
-      <div class="options">
-        <div class="option_menu">
-          <h2>My chilhood neighborhood</h2>
-          <div>
-            <span class="text">Search for places</span>
-            <input type="text" placeholder="My House" data-bind="value: Query, valueUpdate: 'keyup'" autocomplete="off" >
-          </div>
-          <div class="place_list">
-            <ul data-bind="foreach: searchResults">
-              <li data-bind="text: title, visible: appear, click: $parent.showMyMarker" ></li>
-            </ul>
-          </div>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style/style.css">
+
+  <title></title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="options">
+      <div class="option_menu">
+        <h2>London</h2>
+        <div class="search_wrapper">
+          <span class="text">Search for places</span>
+          <input type="text" placeholder="Covent Garden" data-bind="value: Query, valueUpdate: 'keyup'" autocomplete="off">
+          <ul data-bind="foreach: searchResults">
+            <li data-bind="text: title, visible: appear, click: $parent.showMyMarker"></li>
+          </ul>
         </div>
-        <div class="arrow">
-          <img class="arrow_img" src="images/002-right-arrow.svg" alt="">
+        <div class="icons_wrapper">
+          <span>Select the icon you like</span>
+          <ul class="icons_list" data-bind='foreach:icons'>
+            <li><img data-bind="attr: {src:url}, click: $parent.changeIcon" alt=""></li>
+          </ul>
         </div>
       </div>
-      <div id="map" class="map">
+      <div class="arrow">
+        <img class="arrow_img" src="images/002-right-arrow.svg" alt="">
+      </div>
+    </div>
+    <div id="map" class="map">
     </div>
 
-    </div>
-  </body>
-  <script type="text/javascript" src="jQuery/jquery-3.2.1.min.js"></script>
-  <script src="ko/knockout-3.4.2.js"></script>
-  <script src="script/jQuery.js"></script>
-  <script src="script/map.js"></script>
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyCzglwScQnptg2QE0ydILSF10brDe3nTBs&v=3&callback=initMap">
-  </script>
+  </div>
+</body>
+<script type="text/javascript" src="jQuery/jquery-3.2.1.min.js"></script>
+<script src="ko/knockout-3.4.2.js"></script>
+<script src="script/jQuery.js"></script>
+<script src="script/map.js"></script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing&key=AIzaSyCzglwScQnptg2QE0ydILSF10brDe3nTBs&v=3&callback=initMap">
+</script>
 
 </html>
