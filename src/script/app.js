@@ -117,11 +117,27 @@ var ViewModel = function() {
   });
 
 
+  self.toggleOptions = ko.observable(true);
+
+
+
+
+  self.showOptions = function(){
+    if(self.toggleOptions() === true ){
+      self.toggleOptions(false);
+    }else if (self.toggleOptions() === false ){
+      self.toggleOptions(true);
+    }
+  };
+
+  console.log(self.toggleOptions());
+
+
 //When the element in the list is clicked it triggers the event attached to the marker
   self.showMyMarker = function(location) {
     console.log(location.marker);
     google.maps.event.trigger(location.marker, "click");
-  }
+  };
 
 
 //Changes the icon
@@ -131,12 +147,12 @@ var ViewModel = function() {
       self.searchResults()[i].marker.setIcon(self.markerIcon);
       console.log(self.searchResults()[i].marker.icon);
     }
-  }
+  };
 
   self.markerIcon();
 
   console.log(this.searchResults());
-}
+};
 
 var myVM = new ViewModel();
 
@@ -174,7 +190,7 @@ function populateInfoWindow(marker, infowindow) {  // Check to make sure the inf
       error: function() {
         infowindow.setContent('<div> Please check your internet connection or try again later </div>');
       }
-    })
+    });
     infowindow.setContent('<div>' + marker.title + '</div>');
     infowindow.open(map, marker);
     // Make sure the marker property is cleared if the infowindow is closed.
