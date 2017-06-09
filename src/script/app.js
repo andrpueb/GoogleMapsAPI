@@ -1,4 +1,3 @@
-
 var icons = [{
     title: 'truck',
     url: 'http://maps.google.com/mapfiles/ms/micons/truck.png'
@@ -25,7 +24,6 @@ var icons = [{
   }
 ];
 
-var map;
 //MODEL
 
 var firstPlaces = [{
@@ -100,7 +98,7 @@ var ViewModel = function() {
     self.searchResults.push(new Location(placeItem));
   });
 
-
+//Filters the input and shows or not the markers and the elewments of the list
   self.searchInput = ko.computed(function() {
     var userInput = self.Query().toLowerCase();
     for (var i = 0; i < self.searchResults().length; i++) {
@@ -118,11 +116,15 @@ var ViewModel = function() {
     }
   });
 
+
+//When the element in the list is clicked it triggers the event attached to the marker
   self.showMyMarker = function(location) {
     console.log(location.marker);
     google.maps.event.trigger(location.marker, "click");
   }
 
+
+//Changes the icon
   self.changeIcon = function(icon) {
     self.markerIcon = (icon.url);
     for (var i = 0; i < self.searchResults().length; i++) {
@@ -142,16 +144,9 @@ ko.applyBindings(myVM);
 
 
 
-//Google maps error handling
-$.getScript("https://maps.googleapis.com/maps/api/js?libraries=places,drawing&key=AIzaSyCzglwScQnptg2QE0ydILSF10brDe3nTBs&v=3&callback=initMap")
-  .fail(function() {
-    alert('Please check your internet connection or try later')
-  });
 
 
-
-function populateInfoWindow(marker, infowindow) {
-  // Check to make sure the infowindow is not already opened on this marker.
+function populateInfoWindow(marker, infowindow) {  // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
     console.log(marker.title);
@@ -189,6 +184,7 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
+//Makes the marker bounce after selected
 function toggleBounce(marker) {
   if (marker.getAnimation() !== null) {
     marker.setAnimation(null);
@@ -203,6 +199,7 @@ function toggleBounce(marker) {
 //  GOOGLE MAPS
 function initMap() {
 
+  //Two more styles mad
   var retroMap = new google.maps.StyledMapType(
     [{
         "elementType": "geometry",
@@ -405,7 +402,6 @@ function initMap() {
       }
     ],
     {name: 'Retro'});
-
   var nightMap = new google.maps.StyledMapType(
     [{
       "elementType": "geometry",
@@ -567,8 +563,7 @@ function initMap() {
   ],
   { name: 'Night'});
 
-
-  map = new google.maps.Map(document.getElementById('map'), {
+  var  map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 51.508408, lng: -0.127676},
       zoom: 10,
       mapTypeControl: true,
@@ -590,17 +585,11 @@ function initMap() {
       fullscreenControl: true
     });
 
+  //Two mor styled maps added to the options
     map.mapTypes.set('nightmap', nightMap);
     map.setMapTypeId('nightmap');
     map.mapTypes.set('retromap', retroMap);
     map.setMapTypeId('retromap');
-
-
-  //En este array guardamos las lista de locations como markers
-
-  /*  document.getElementById.addListener('click', function() {
-      populateInfoWindow(this, myInfowindow);
-    });*/
 
 
   var myInfowindow = new google.maps.InfoWindow();
@@ -629,7 +618,7 @@ function initMap() {
       populateInfoWindow(this, myInfowindow);
 
     });
-
+    //Add the bounce event to the marker
     marker.addListener('click', function() {
       toggleBounce(this);
     });
