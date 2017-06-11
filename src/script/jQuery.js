@@ -7,5 +7,15 @@ var $arrow = $('.arrow');
 
 
 function weHaveAProblem(){
-    alert('We are having problems loading google maps :(')
+    alert('We are having problems loading google maps :(');
   }
+
+
+//async http request using jquery
+
+$.get("script/icons.json", callback);
+
+function callback (mydata){
+  myVM.iconList(mydata);
+  myVM.markerIcon(myVM.iconList()[1].url);
+}

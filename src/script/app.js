@@ -26,6 +26,7 @@ var icons = [{
 
 //MODEL
 
+
 var firstPlaces = [{
     title: 'Gordons wine bar',
     location: {
@@ -90,7 +91,8 @@ var Location = function(data) {
 
 var ViewModel = function() {
   var self = this;
-  self.markerIcon = ko.observable(icons[1].url);
+  self.iconList = ko.observableArray([]);
+  self.markerIcon = ko.observable();
 
   self.searchResults = ko.observableArray([]);
   self.Query = ko.observable('');
@@ -149,7 +151,6 @@ var ViewModel = function() {
     }
   };
 
-  self.markerIcon();
 
   console.log(this.searchResults());
 };
@@ -159,8 +160,7 @@ var myVM = new ViewModel();
 ko.applyBindings(myVM);
 
 
-
-
+//getIconsJson ();
 
 function populateInfoWindow(marker, infowindow) {  // Check to make sure the infowindow is not already opened on this marker.
   if (infowindow.marker != marker) {
