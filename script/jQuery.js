@@ -1,1 +1,1 @@
-function weHaveAProblem(){alert("We are having problems loading google maps :(")}var $options=$(".options"),$arrow=$(".arrow");
+function weHaveAProblem(){alert("We are having problems loading google maps :(")}function callback(o){myVM.iconList(o),myVM.markerIcon(myVM.iconList()[1].url)}var $options=$(".options"),$arrow=$(".arrow");$.get("script/icons.json",callback);
