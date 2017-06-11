@@ -123,8 +123,6 @@ var ViewModel = function() {
       console.log(self.searchResults()[i].marker.icon);
     }
   };
-
-
   console.log(this.searchResults());
 };
 
@@ -184,6 +182,7 @@ function toggleBounce(marker) {
     }, 1400);
   }
 }
+
 
 //  GOOGLE MAPS
 function initMap() {
@@ -584,6 +583,14 @@ function initMap() {
   var myInfowindow = new google.maps.InfoWindow();
   var bounds = new google.maps.LatLngBounds();
 
+  function insertInfoWindow (){
+    populateInfoWindow(this, myInfowindow);
+  }
+
+  function insertBounce(){
+    toggleBounce(this);
+  }
+
   for (var i = 0; i < myVM.searchResults().length; i++) {
     // Get the position from the location array.
     var position = myVM.searchResults()[i].location;
@@ -602,15 +609,12 @@ function initMap() {
 
     // Push the marker to our searchResults array adding a marker object to each location.
     myVM.searchResults()[i].marker = marker;
-    // Create an onclick event to open the large infowindow at each marker.
-    marker.addListener('click', function() {
-      populateInfoWindow(this, myInfowindow);
 
-    });
+    // Create an onclick event to open the large infowindow at each marker.
+
+    marker.addListener('click', insertInfoWindow);
     //Add the bounce event to the marker
-    marker.addListener('click', function() {
-      toggleBounce(this);
-    });
+    marker.addListener('click', insertBounce);
 
     bounds.extend(myVM.searchResults()[i].marker.position);
   }
