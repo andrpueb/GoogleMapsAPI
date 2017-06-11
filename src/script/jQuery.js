@@ -13,7 +13,7 @@ function weHaveAProblem(){
 
 //async http request using jquery
 
-$.get("script/icons.json", callback);
+$.get("json/icons.json", callback);
 
 function callback (mydata){
   myVM.iconList(mydata);

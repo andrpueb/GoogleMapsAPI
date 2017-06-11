@@ -1,34 +1,7 @@
-var icons = [{
-    title: 'truck',
-    url: 'http://maps.google.com/mapfiles/ms/micons/truck.png'
-  },
-  {
-    title: 'pin',
-    url: 'http://maps.google.com/mapfiles/ms/micons/blue-pushpin.png'
-  },
-  {
-    title: 'man',
-    url: 'http://maps.google.com/mapfiles/ms/micons/man.png'
-  },
-  {
-    title: 'dot',
-    url: 'http://maps.google.com/mapfiles/ms/micons/blue-dot.png'
-  },
-  {
-    title: 'moto',
-    url: 'http://maps.google.com/mapfiles/ms/micons/motorcycling.png'
-  },
-  {
-    title: 'ski',
-    url: 'http://maps.google.com/mapfiles/ms/micons/ski.png'
-  }
-];
 
 //MODEL
 
-
-var firstPlaces = [{
-    title: 'Gordons wine bar',
+var firstPlaces = [{    title: 'Gordons wine bar',
     location: {
       lat: 51.508144,
       lng: -0.123314
@@ -91,7 +64,7 @@ var Location = function(data) {
 
 var ViewModel = function() {
   var self = this;
-  self.iconList = ko.observableArray([]);
+  self.iconList = ko.observableArray([]);//In this array we put the icon objects after the http request
   self.markerIcon = ko.observable();
 
   self.searchResults = ko.observableArray([]);
@@ -642,6 +615,9 @@ function initMap() {
     bounds.extend(myVM.searchResults()[i].marker.position);
   }
 
+  //Keeps the markers inside the window when resizing it
+  google.maps.event.addDomListener(window, 'resize', function() {
   map.fitBounds(bounds);
+  });
 
 }
